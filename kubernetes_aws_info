@@ -1,0 +1,75 @@
+install awscliv2 on ubuntu:
+
+apt-get update -y && apt-get upgrade -y
+sudo apt install unzip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+
+install kubectl on ubuntu:
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+kubectl version --short --client
+kubectl version --client
+
+install eksctl on ubuntu:
+
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+eksctl version
+
+
+
+eksctl security groups:
+nodesg:
+no inbound
+
+control panel :
+no inbound
+
+cluster sg:
+all control panel
+all nodesg
+443 jumpsg
+
+
+
+
+
+public:
+
+eksctl create cluster --name anji --version 1.29 --region us-west-1 --nodegroup-name worker-nodes --node-type t2.micro --nodes 2
+
+
+private:
+
+eksctl create cluster --name anji --region ap-south-1 --vpc-private-subnets=subnet-0f7af7b6de9dc6fc5,subnet-0272b533c3404ab99 --node-private-networking --version 1.29 --nodegroup-name standard-workers --node-type t2.micro --nodes 1 --nodes-min 1 --nodes-max 2
+
+
+aws eks update-kubeconfig --region us-west-1 --name anji
+kubectl get nodes
+
+
+cat >load-balancer-role-trust-policy.json <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::471112907684:oidc.eks.ap-south-1.amazonaws.com/id/0F85CD90098F08EF7238DE08F1BD7925"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "oidc.eks.ap-south-1.amazonaws.com/id/0F85CD90098F08EF7238DE08F1BD7925:aud": "sts.amazonaws.com",
+                    "oidc.eks.ap-south-1.amazonaws.com/id/0F85CD90098F08EF7238DE08F1BD7925:sub": "system:serviceaccount:kube-system:aws-load-balancer-controller"
+                }
+            }
+        }
+    ]
+}
+EOF
