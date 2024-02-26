@@ -1,7 +1,6 @@
 install awscliv2 on ubuntu:
 
-apt-get update -y && apt-get upgrade -y
-sudo apt install unzip
+apt-get update -y && apt-get upgrade -y &&  apt install unzip -y
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
@@ -46,7 +45,7 @@ eksctl create cluster --name anji --version 1.29 --region us-west-1 --nodegroup-
 
 private:
 
-eksctl create cluster --name anji --region ap-south-1 --vpc-private-subnets=subnet-0f7af7b6de9dc6fc5,subnet-0272b533c3404ab99 --node-private-networking --version 1.29 --nodegroup-name standard-workers --node-type t2.micro --nodes 1 --nodes-min 1 --nodes-max 2
+eksctl create cluster --name anji --region us-east-1 --vpc-private-subnets=subnet-003f1a5dca6f58f41,subnet-073212a72e7c6b3dd --node-private-networking --version 1.29 --nodegroup-name standard-workers --node-type t2.micro --nodes 2 --nodes-min 2 --nodes-max 3 --public-access=false --private-access=true
 
 
 aws eks update-kubeconfig --region us-west-1 --name anji
