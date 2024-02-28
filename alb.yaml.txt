@@ -23,3 +23,67 @@ spec:
                   number: 80
 
 kubectl describe ingress app-ingress
+
+
+
+    1  ls -l
+    2  cd nginx/
+    3  ls -l
+    4  cat ingress.yaml
+    5  ls -l
+    6  vim ingressmain.yaml
+    7  kubectl delete -f deploy.yaml
+    8  kubectl delete -f service.yaml
+    9  kubectl delete -f ingress
+   10  kubectl delete -f ingress.yaml
+   11  ls -l
+   12  vim nginxapp.yaml
+   13  vim nginxserv.yaml
+   14  ls -l
+   15  kubectl create -f nginxapp.yaml
+   16  kubectl create -f nginxserv.yaml
+   17  vim nginxserv.yaml
+   18  kubectl create -f nginxserv.yaml
+   19  kubectl create -f ingressmain.yaml
+   20  kubectl --namespace=kube-system get pods -l “app.kubernetes.io/name=<Ingress name>,app.kubernetes.io/instance=alb”
+   21  kubectl --namespace=kube-system get pods -l “app.kubernetes.io/name=app-ingress,app.kubernetes.io/instance=alb”
+   22  kubectl get ingress -o wide
+   23  kubectl describe ingress -o wide
+   24  kubectl describe ingress app-ingress
+   25  ls -l
+   26  vim ingress.yaml
+   27  kubectl describe ingress app-ingress
+   28  vim ingress.yaml
+   29  kubectl describe ingress app-ingress
+   30  aws iam put-role-policy --role-name eksctl-my-awesome-cluster-addon-iamserviceacc-Role1-oJLLv8iJ9fvj --policy-name AddTagsPolicy --policy-document '{
+   31      "Version": "2012-10-17",
+   32      "Statement": [
+   33          {
+   34              "Effect": "Allow",
+   35              "Action": "elasticloadbalancing:AddTags",
+   36              "Resource": "arn:aws:elasticloadbalancing:ap-south-1:730335550052:targetgroup/k8s-default-nginxsvc-18f74f7bea/*"
+   37          }
+   38      ]
+   39  }'
+   40  kubectl describe ingress app-ingress
+   41  eksctl utils associate-iam-oidc-provider     --region ap-south-1     --cluster my-awesome-nodegroup     --approve
+   42  eksctl utils associate-iam-oidc-provider     --region ap-south-1     --cluster my-awesome-cluster     --approve
+   43  curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.2.1/docs/install/iam_policy.json
+   44  ls -l
+   45  aws iam create-policy     --policy-name AWSLoadBalancerControllerIAMPolicy     --policy-document file://iam-policy.json
+   46  eksctl create iamserviceaccount --cluster=my-awesome-cluster --namespace=kube-system --name=aws-load-balancer-controller --attach-policy-arn=arn:aws:iam::730335550052:policy/AWSLoadBalancerControllerIAMPolicy --override-existing-serviceaccounts --approve
+   47  ~/.aws/config
+   48  vim ~/.aws/config
+   49  export AWS_REGION=ap-south-1
+   50  eksctl create iamserviceaccount --cluster=my-awesome-cluster --namespace=kube-system --name=aws-load-balancer-controller --attach-policy-arn=arn:aws:iam::730335550052:policy/AWSLoadBalancerControllerIAMPolicy --override-existing-serviceaccounts --approve
+   51  curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.2.1/docs/install/iam_policy.json
+   52  helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=my-awesome-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
+   53  kubectl describe ingress app-ingress
+   54  ls -l
+   55  kubectl create -f ingressmain.yaml
+   56  kubectl describe ingress app-ingress
+   57  kubectl delete -f ingressmain.yaml
+   58  kubectl create -f ingressmain.yaml
+   59  kubectl describe ingress app-ingress
+   60  history
+
