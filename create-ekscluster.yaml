@@ -2,12 +2,12 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
   name: my-awesome-cluster
-  region: eu-central-1
-  version: "1.18"
+  region: ap-south-1
+  version: "1.29"
 managedNodeGroups:
   - name: my-awesome-nodegroup
     amiFamily: AmazonLinux2
-    instanceType: t2.micro
+    instanceType: t3a.small
     spot: false
     minSize: 1
     maxSize: 2
@@ -17,7 +17,7 @@ managedNodeGroups:
       k8s.io/cluster-autoscaler/my-awesome-cluster: "1"
     securityGroups:
       attachIDs:
-        - my-federated-security-group
+        - sg-073af896ee222aa00
     iam:
       attachPolicyARNs:
         - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
@@ -28,10 +28,10 @@ managedNodeGroups:
 vpc:
   subnets:
     private:
-      eu-central-1a:
-        id: my-private-subnet-1
-      eu-central-1b:
-        id: my-private-subnet-2
+      ap-south-1a:
+        id: subnet-0f514be4310b6a343
+      ap-south-1b:
+        id: subnet-0af92e1c6f35b5f6b
   clusterEndpoints:
     publicAccess: false
     privateAccess: true
@@ -40,12 +40,13 @@ vpc:
 
 
 
-   eksctl utils associate-iam-oidc-provider --region us-east-1 --cluster my-awesome-cluster --approve
+   eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster my-awesome-cluster --approve
    curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.2.0/docs/install/iam_policy.json
+   
 
    aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
 
-eksctl create iamserviceaccount --cluster my-awesome-cluster --region us-east-1 --namespace kube-system --name aws-load-balancer-controller --attach-policy-arn arn:aws:iam::471112907684:policy/AWSLoadBalancerControllerIAMPolicy --override-existing-serviceaccounts --approve
+eksctl create iamserviceaccount --cluster my-awesome-cluster --region ap-south-1 --namespace kube-system --name aws-load-balancer-controller --attach-policy-arn arn:aws:iam::730335550052:policy/AWSLoadBalancerControllerIAMPolicy --override-existing-serviceaccounts --approve
 
  helm repo add eks https://aws.github.io/eks-charts
  helm repo update

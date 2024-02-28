@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alb-ingress-connect-nginx
+  namespace: kube-system
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: " "
+    alb.ingress.kubernetes.io/healthcheck-path: "/"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/subnets: "subnet-071c1843db5ed4985,subnet-084336fb2210a69f4"
+    alb.ingress.kubernetes.io/tags: "Environment=dev,Team=app"
+spec:
+  rules:
+    - host: "*.amazonaws.com"
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "nginx"
+                port:
+                  number: 80
+
+kubectl describe ingress app-ingress
